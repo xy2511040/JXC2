@@ -1,12 +1,10 @@
 package cn.jsmoon.entity;
 
 import lombok.Data;
-
 import javax.persistence.*;
 
 /**
- * @program: Jxc
- * @description: 角色实体
+ * 角色实体
  * @author: LTQ
  * @create: 2018-08-19 14:22
  **/

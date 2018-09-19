@@ -1,13 +1,11 @@
 package cn.jsmoon.entity;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 /**
- * @program: Jxc
- * @description: 用户实体
+ * 用户实体
  * @author: LTQ
  * @create: 2018-08-19 14:22
  **/
@@ -34,4 +32,8 @@ public class User {
     @Column(length = 1000)
     private String remarks;     //备注
 
+    @Transient
+    private String roles; //用户所拥有的角色，不映射到数据库
+
 }
+

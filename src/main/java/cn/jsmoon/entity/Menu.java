@@ -1,12 +1,10 @@
 package cn.jsmoon.entity;
 
 import lombok.Data;
-
 import javax.persistence.*;
 
 /**
- * @program: Jxc
- * @description: 菜单实体
+ * 菜单实体
  * @author: LTQ
  * @create: 2018-08-19 14:22
  **/
@@ -14,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_menu")
 public class Menu {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;     //自增ID
@@ -24,11 +23,13 @@ public class Menu {
     @Column(length = 200)
     private String url;     //菜单地址
 
-    private Integer state;  //菜单状态
+    private Integer state;  //菜单状态 节点类型 1根节点 0叶子节点
 
     @Column(length = 100)
     private String icon;    //菜单图标
 
-    private Integer pId;    //父菜单
+    private Integer pId;    //父菜单Id
+
+
 
 }
