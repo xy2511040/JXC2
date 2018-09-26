@@ -1,5 +1,7 @@
 package cn.jsmoon.service;
 
+import cn.jsmoon.entity.UserRole;
+
 /**
  * 用户角色关联Service类
  * @author: LTQ
@@ -12,4 +14,10 @@ public interface UserRoleService {
      * @param userId
      */
     void deleteByUserId(Integer userId);
+
+    /**
+     * 添加或者修改用户角色关联信息
+     * @param userRole
+     */
+    void save(UserRole userRole);
 }

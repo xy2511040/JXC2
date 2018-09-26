@@ -75,4 +75,10 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    @Override
+    public User findById(Integer id) {
+        return userRepository.findById(id).get();
+    }
+
+
 }

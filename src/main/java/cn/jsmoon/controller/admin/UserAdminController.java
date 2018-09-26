@@ -2,9 +2,11 @@ package cn.jsmoon.controller.admin;
 
 import cn.jsmoon.entity.Role;
 import cn.jsmoon.entity.User;
+import cn.jsmoon.entity.UserRole;
 import cn.jsmoon.service.RoleService;
 import cn.jsmoon.service.UserRoleService;
 import cn.jsmoon.service.UserService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,15 +45,16 @@ public class UserAdminController {
      * @throws Exception
      */
     @RequestMapping("/list")
+    @RequiresPermissions(value = "用户管理")
     public Map<String, Object> list(User user,
                                     @RequestParam(value = "page", required = false) Integer page,
                                     @RequestParam(value = "rows", required = false) Integer rows) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
         List<User> userList = userService.list(user, page, rows, Direction.ASC, "id");
         userList.forEach(u -> {
-            List<Role> roleList = roleService.fingByUserId(u.getId());
+            List<Role> roleList = roleService.findByUserId(u.getId());
             StringBuffer sb = new StringBuffer();
-            roleList.forEach(r -> sb.append("," + r.getName()));
+            roleList.forEach(role -> sb.append("," + role.getName()));
             u.setRoles(sb.toString().replaceFirst(",", ""));
         });
         Long total = userService.getCount(user);
@@ -67,6 +70,7 @@ public class UserAdminController {
      * @throws Exception
      */
     @RequestMapping("/save")
+    @RequiresPermissions(value = "用户管理")
     public Map<String, Object> save(User user) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
         if (user.getId() == null) {
@@ -88,11 +92,33 @@ public class UserAdminController {
      * @throws Exception
      */
     @RequestMapping("/delete")
+    @RequiresPermissions(value = "用户管理")
     public Map<String, Object> delete(Integer id) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
         userRoleService.deleteByUserId(id); //删除用户角色关联表信息
         userService.deleteById(id); //删除用户表信息
         resultMap.put("success",true);
+        return resultMap;
+    }
+
+    /**
+     * 保存用户角色设置
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/saveRoleSet")
+    @RequiresPermissions(value = "用户管理")
+    public Map<String,Object> save(String roleIds,Integer userId)throws Exception{
+        Map<String, Object> resultMap = new HashMap<>();
+        userRoleService.deleteByUserId(userId);
+        String roleIdStr[] = roleIds.split(",");
+        for (int i = 0; i < roleIdStr.length; i++) {
+            UserRole userRole = new UserRole();
+            userRole.setUser(userService.findById(userId));
+            userRole.setRole(roleService.findById(Integer.parseInt(roleIdStr[i])));
+            userRoleService.save(userRole);
+        }
+        resultMap.put("success", true);
         return resultMap;
     }
 

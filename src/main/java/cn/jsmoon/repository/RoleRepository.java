@@ -19,6 +19,6 @@ public interface RoleRepository extends JpaRepository<Role,Integer>{
      * @return
      */
     @Query(value = "SELECT r.* FROM t_user u,t_role r,t_user_role ur WHERE ur.user_id=u.id AND ur.role_id=r.id AND u.id=?1",nativeQuery = true)
-    List<Role> fingByUserId(Integer id);
+    List<Role> findByUserId(Integer id);
 
 }

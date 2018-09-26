@@ -1,5 +1,6 @@
 package cn.jsmoon.service.impl;
 
+import cn.jsmoon.entity.UserRole;
 import cn.jsmoon.repository.UserRoleRepository;
 import cn.jsmoon.service.UserRoleService;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,10 @@ public class UserRoleServiceImpl implements UserRoleService{
     @Override
     public void deleteByUserId(Integer userId) {
         userRoleRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public void save(UserRole userRole) {
+        userRoleRepository.save(userRole);
     }
 }

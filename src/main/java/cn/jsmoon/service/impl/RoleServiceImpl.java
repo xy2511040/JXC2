@@ -21,13 +21,18 @@ public class RoleServiceImpl implements RoleService {
     private RoleRepository repository;
 
     @Override
-    public List<Role> fingByUserId(Integer id) {
-        return repository.fingByUserId(id);
+    public List<Role> findByUserId(Integer id) {
+        return repository.findByUserId(id);
     }
 
     @Override
     public Role findById(Integer id) {
         return repository.findById(id).get();
+    }
+
+    @Override
+    public List<Role> listAll() {
+        return repository.findAll();
     }
 
 }

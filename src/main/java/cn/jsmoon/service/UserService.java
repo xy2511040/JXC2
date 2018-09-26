@@ -49,4 +49,11 @@ public interface UserService {
      */
     void deleteById(Integer id);
 
+    /**
+     * 根据id查询实体
+     * @param id
+     * @return
+     */
+    User findById(Integer id);
+
 }

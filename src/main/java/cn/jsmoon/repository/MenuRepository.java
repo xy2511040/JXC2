@@ -14,6 +14,14 @@ import java.util.List;
 public interface MenuRepository extends JpaRepository<Menu,Integer>{
 
     /**
+     * 根据角色Id查询菜单集合
+     * @param roleId
+     * @return
+     */
+    @Query(value = "SELECT m.* FROM t_role r,t_role_menu rm,t_menu m WHERE r.id=rm.role_id AND rm.menu_id=m.id AND r.id=?1",nativeQuery = true)
+    List<Menu> findByRoleId(int roleId);
+
+    /**
      * 根据父节点Id和当前登录用户角色Id查询菜单集合
      * @param parentId
      * @param roleId

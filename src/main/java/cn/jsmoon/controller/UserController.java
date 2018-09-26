@@ -81,7 +81,7 @@ public class UserController {
             String userName = (String) SecurityUtils.getSubject().getPrincipal();
             User currentUser = userService.findByUserName(userName);
             session.setAttribute("currentUser", currentUser);
-            List<Role> roleList = roleService.fingByUserId(currentUser.getId());
+            List<Role> roleList = roleService.findByUserId(currentUser.getId());
             map.put("roleList", roleList);
             map.put("roleSize", roleList.size());
             map.put("success", true);

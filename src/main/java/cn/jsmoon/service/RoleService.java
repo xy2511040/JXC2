@@ -15,7 +15,7 @@ public interface RoleService {
      * @param id
      * @return
      */
-    List<Role> fingByUserId(Integer id);
+    List<Role> findByUserId(Integer id);
 
     /**
      * 通过角色ID查找角色实体
@@ -23,4 +23,10 @@ public interface RoleService {
      * @return
      */
     Role findById(Integer id);
+
+    /**
+     * 查询全部角色
+     * @return
+     */
+    List<Role> listAll();
 }
