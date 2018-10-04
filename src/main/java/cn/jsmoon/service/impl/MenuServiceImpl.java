@@ -1,7 +1,6 @@
 package cn.jsmoon.service.impl;
 
 import cn.jsmoon.entity.Menu;
-import cn.jsmoon.entity.RoleMenu;
 import cn.jsmoon.repository.MenuRepository;
 import cn.jsmoon.service.MenuService;
 import org.springframework.stereotype.Service;

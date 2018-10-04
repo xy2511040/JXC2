@@ -6,6 +6,7 @@ import cn.jsmoon.entity.UserRole;
 import cn.jsmoon.service.RoleService;
 import cn.jsmoon.service.UserRoleService;
 import cn.jsmoon.service.UserService;
+import cn.jsmoon.util.StringUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -111,12 +112,14 @@ public class UserAdminController {
     public Map<String,Object> save(String roleIds,Integer userId)throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
         userRoleService.deleteByUserId(userId);
-        String roleIdStr[] = roleIds.split(",");
-        for (int i = 0; i < roleIdStr.length; i++) {
-            UserRole userRole = new UserRole();
-            userRole.setUser(userService.findById(userId));
-            userRole.setRole(roleService.findById(Integer.parseInt(roleIdStr[i])));
-            userRoleService.save(userRole);
+        if(StringUtil.isNotEmpty(roleIds)){
+            String roleIdStr[] = roleIds.split(",");
+            for (int i = 0; i < roleIdStr.length; i++) {
+                UserRole userRole = new UserRole();
+                userRole.setUser(userService.findById(userId));
+                userRole.setRole(roleService.findById(Integer.parseInt(roleIdStr[i])));
+                userRoleService.save(userRole);
+            }
         }
         resultMap.put("success", true);
         return resultMap;

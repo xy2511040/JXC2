@@ -3,11 +3,11 @@ package cn.jsmoon.controller.admin;
 import cn.jsmoon.entity.Menu;
 import cn.jsmoon.entity.Role;
 import cn.jsmoon.entity.RoleMenu;
-import cn.jsmoon.entity.UserRole;
 import cn.jsmoon.service.MenuService;
 import cn.jsmoon.service.RoleMenuService;
 import cn.jsmoon.service.RoleService;
 import cn.jsmoon.service.UserRoleService;
+import cn.jsmoon.util.StringUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.shiro.authz.annotation.Logical;
@@ -189,12 +189,14 @@ public class RoleAdminController {
     public Map<String,Object> saveMenuSet(String menuIds, Integer roleId)throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
         roleMenuService.deleteByRoleId(roleId); //删除角色菜单关联表信息
-        String menuIdStr[] = menuIds.split(",");
-        for (int i = 0; i < menuIdStr.length; i++) {
-            RoleMenu roleMenu = new RoleMenu();
-            roleMenu.setRole(roleService.findById(roleId));
-            roleMenu.setMenu(menuService.findById(Integer.parseInt(menuIdStr[i])));
-            roleMenuService.save(roleMenu);
+        if(StringUtil.isNotEmpty(menuIds)){
+            String menuIdStr[] = menuIds.split(",");
+            for (int i = 0; i < menuIdStr.length; i++) {
+                RoleMenu roleMenu = new RoleMenu();
+                roleMenu.setRole(roleService.findById(roleId));
+                roleMenu.setMenu(menuService.findById(Integer.parseInt(menuIdStr[i])));
+                roleMenuService.save(roleMenu);
+            }
         }
         resultMap.put("success", true);
         return resultMap;

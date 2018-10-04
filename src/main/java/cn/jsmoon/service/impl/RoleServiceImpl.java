@@ -2,7 +2,6 @@ package cn.jsmoon.service.impl;
 
 
 import cn.jsmoon.entity.Role;
-import cn.jsmoon.entity.Role;
 import cn.jsmoon.repository.RoleRepository;
 import cn.jsmoon.service.RoleService;
 import cn.jsmoon.util.StringUtil;
