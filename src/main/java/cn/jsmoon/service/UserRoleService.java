@@ -20,4 +20,10 @@ public interface UserRoleService {
      * @param userRole
      */
     void save(UserRole userRole);
+
+    /**
+     * 根据角色ID删除用户角色关联表信息
+     * @param roleId
+     */
+    void deleteByRoleId(Integer roleId);
 }

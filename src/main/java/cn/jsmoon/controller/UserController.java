@@ -175,7 +175,7 @@ public class UserController {
     public JsonArray getMenuByParentId(Integer parentId, Integer roleId) throws Exception {
         JsonArray jsonArray = new JsonArray();
         List<Menu> menuList = menuService.findByParentIdAndRoleId(parentId, roleId);
-        menuList.forEach((menu) -> {
+        menuList.forEach(menu -> {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("id", menu.getId());      //菜单节点Id
             jsonObject.addProperty("text", menu.getName());  //菜单节点名称
@@ -190,6 +190,7 @@ public class UserController {
             jsonObject.add("attributes", attributeObject);
             jsonArray.add(jsonObject);
         });
+        return jsonArray;
         /*for (Menu menu : menuList) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("id", menu.getId());      //菜单节点Id
@@ -205,7 +206,6 @@ public class UserController {
             jsonObject.add("attributes", attributeObject);
             jsonArray.add(jsonObject);
         }*/
-        return jsonArray;
     }
 
 

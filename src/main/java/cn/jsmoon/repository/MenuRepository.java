@@ -29,4 +29,12 @@ public interface MenuRepository extends JpaRepository<Menu,Integer>{
      */
     @Query(value = "SELECT * FROM t_menu WHERE p_id=?1 AND id IN (SELECT menu_id FROM t_role_menu WHERE role_id=?2)",nativeQuery = true)
     List<Menu> findByParentIdAndRoleId(int parentId,int roleId);
+
+    /**
+     * 根据父节点查找所有子节点
+     * @param parentId
+     * @return
+     */
+    @Query(value = "SELECT * FROM t_menu WHERE p_id=?1",nativeQuery = true)
+    List<Menu> findByParentId(int parentId);
 }

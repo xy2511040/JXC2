@@ -1,6 +1,7 @@
 package cn.jsmoon.service.impl;
 
 import cn.jsmoon.entity.Menu;
+import cn.jsmoon.entity.RoleMenu;
 import cn.jsmoon.repository.MenuRepository;
 import cn.jsmoon.service.MenuService;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,20 @@ public class MenuServiceImpl implements MenuService{
     @Override
     public List<Menu> findByParentIdAndRoleId(int parentId, int roleId) {
         return menuRepository.findByParentIdAndRoleId(parentId, roleId);
+    }
+
+    @Override
+    public List<Menu> findByRoleId(int roleId) {
+        return menuRepository.findByRoleId(roleId);
+    }
+
+    @Override
+    public List<Menu> findByParentId(int parentId) {
+        return menuRepository.findByParentId(parentId);
+    }
+
+    @Override
+    public Menu findById(Integer id) {
+        return menuRepository.findById(id).get();
     }
 }
