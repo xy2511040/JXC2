@@ -1,8 +1,10 @@
 package cn.jsmoon.controller.admin;
 
+import cn.jsmoon.entity.Log;
 import cn.jsmoon.entity.Role;
 import cn.jsmoon.entity.User;
 import cn.jsmoon.entity.UserRole;
+import cn.jsmoon.service.LogService;
 import cn.jsmoon.service.RoleService;
 import cn.jsmoon.service.UserRoleService;
 import cn.jsmoon.service.UserService;
@@ -37,6 +39,9 @@ public class UserAdminController {
     @Resource
     private UserRoleService userRoleService;
 
+    @Resource
+    private LogService logService;
+
     /**
      * 分页查询用户信息
      * @param user
@@ -61,6 +66,7 @@ public class UserAdminController {
         Long total = userService.getCount(user);
         resultMap.put("rows", userList);
         resultMap.put("total", total);
+        logService.save(new Log(Log.SEARCH_ACTION,"查询用户信息"));
         return resultMap;
     }
 
@@ -81,6 +87,11 @@ public class UserAdminController {
                 return resultMap;
             }
         }
+        if(user.getId()!=null){
+            logService.save(new Log(Log.UPDATE_ACTION,"更新用户信息"+user));
+        }else{
+            logService.save(new Log(Log.ADD_ACTION,"添加用户信息"+user));
+        }
         userService.save(user);
         resultMap.put("success", true);
         return resultMap;
@@ -95,6 +106,7 @@ public class UserAdminController {
     @RequestMapping("/delete")
     @RequiresPermissions(value = "用户管理")
     public Map<String, Object> delete(Integer id) throws Exception {
+        logService.save(new Log(Log.DELETE_ACTION,"删除用户信息"+userService.findById(id)));
         Map<String, Object> resultMap = new HashMap<>();
         userRoleService.deleteByUserId(id); //删除用户角色关联表信息
         userService.deleteById(id); //删除用户表信息
@@ -122,6 +134,7 @@ public class UserAdminController {
             }
         }
         resultMap.put("success", true);
+        logService.save(new Log(Log.UPDATE_ACTION,"保存用户角色设置"));
         return resultMap;
     }
 

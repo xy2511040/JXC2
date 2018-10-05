@@ -13,6 +13,7 @@
 
         var url;
 
+        <!--rolePermissionSet Start -->
         function formatEdit(val, row) {
             return "<a href=\"javascript:openRoleChooesDialog('" + row.roles + "', " + row.id + ");\"><img style='margin-top:4px' src='/static/images/edit.gif'/></a>";
         }
@@ -57,6 +58,7 @@
         function closeRoleSetDialog() {
             $("#dlg2").dialog("close");
         }
+        <!--rolePermissionSet End -->
 
         function searchUser() {
             $("#dg").datagrid("load", {

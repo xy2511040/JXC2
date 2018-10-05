@@ -1,8 +1,10 @@
 package cn.jsmoon.controller;
 
+import cn.jsmoon.entity.Log;
 import cn.jsmoon.entity.Menu;
 import cn.jsmoon.entity.Role;
 import cn.jsmoon.entity.User;
+import cn.jsmoon.service.LogService;
 import cn.jsmoon.service.MenuService;
 import cn.jsmoon.service.RoleService;
 import cn.jsmoon.service.UserService;
@@ -45,6 +47,9 @@ public class UserController {
     @Resource
     private MenuService menuService;
 
+    @Resource
+    private LogService logService;
+
     /**
      * 用户登录判断
      *
@@ -85,6 +90,7 @@ public class UserController {
             map.put("roleList", roleList);
             map.put("roleSize", roleList.size());
             map.put("success", true);
+            logService.save(new Log(Log.LOGIN_ACTION,"用户登录"));
             return map;
         } catch (Exception e) {
             e.printStackTrace();

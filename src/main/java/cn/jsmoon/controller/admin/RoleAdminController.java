@@ -1,12 +1,10 @@
 package cn.jsmoon.controller.admin;
 
+import cn.jsmoon.entity.Log;
 import cn.jsmoon.entity.Menu;
 import cn.jsmoon.entity.Role;
 import cn.jsmoon.entity.RoleMenu;
-import cn.jsmoon.service.MenuService;
-import cn.jsmoon.service.RoleMenuService;
-import cn.jsmoon.service.RoleService;
-import cn.jsmoon.service.UserRoleService;
+import cn.jsmoon.service.*;
 import cn.jsmoon.util.StringUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -41,6 +39,9 @@ public class RoleAdminController {
     @Resource
     private MenuService menuService;
 
+    @Resource
+    private LogService logService;
+
     /**
      * 展示全部角色
      * @return
@@ -51,6 +52,7 @@ public class RoleAdminController {
     public Map<String,Object> listAll()throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("rows", roleService.listAll());
+        logService.save(new Log(Log.SEARCH_ACTION,"查询所有角色信息"));
         return resultMap;
     }
 
@@ -72,6 +74,7 @@ public class RoleAdminController {
         Long total = roleService.getCount(role);
         resultMap.put("rows", roleList);
         resultMap.put("total", total);
+        logService.save(new Log(Log.SEARCH_ACTION,"查询角色信息"));
         return resultMap;
     }
 
@@ -84,6 +87,11 @@ public class RoleAdminController {
     @RequestMapping("/save")
     @RequiresPermissions(value = "角色管理")
     public Map<String, Object> save(Role role) throws Exception {
+        if(role.getId()!=null){
+            logService.save(new Log(Log.UPDATE_ACTION,"修改角色信息"+role));
+        }else{
+            logService.save(new Log(Log.ADD_ACTION,"添加角色信息"+role));
+        }
         Map<String, Object> resultMap = new HashMap<>();
         if (role.getId() == null) {
             if (roleService.findByRoleName(role.getName()) != null) {
@@ -106,6 +114,7 @@ public class RoleAdminController {
     @RequestMapping("/delete")
     @RequiresPermissions(value = "角色管理")
     public Map<String, Object> delete(Integer id) throws Exception {
+        logService.save(new Log(Log.DELETE_ACTION,"删除角色信息"+roleService.findById(id)));
         Map<String, Object> resultMap = new HashMap<>();
         userRoleService.deleteByRoleId(id); //删除用户角色关联表信息
         roleMenuService.deleteByRoleId(id); //删除角色菜单关联表信息

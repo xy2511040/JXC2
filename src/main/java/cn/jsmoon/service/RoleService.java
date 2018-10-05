@@ -1,7 +1,6 @@
 package cn.jsmoon.service;
 
 import cn.jsmoon.entity.Role;
-import cn.jsmoon.entity.Role;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
