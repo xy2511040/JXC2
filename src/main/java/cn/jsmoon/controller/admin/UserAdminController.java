@@ -9,13 +9,14 @@ import cn.jsmoon.service.RoleService;
 import cn.jsmoon.service.UserRoleService;
 import cn.jsmoon.service.UserService;
 import cn.jsmoon.util.StringUtil;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ import java.util.Map;
  * @author: LTQ
  * @create: 2018-09-15 02:56
  **/
-@RestController
+@Controller
 @RequestMapping("/admin/user")
 public class UserAdminController {
 
@@ -51,6 +52,7 @@ public class UserAdminController {
      * @throws Exception
      */
     @RequestMapping("/list")
+    @ResponseBody
     @RequiresPermissions(value = "用户管理")
     public Map<String, Object> list(User user,
                                     @RequestParam(value = "page", required = false) Integer page,
@@ -77,6 +79,7 @@ public class UserAdminController {
      * @throws Exception
      */
     @RequestMapping("/save")
+    @ResponseBody
     @RequiresPermissions(value = "用户管理")
     public Map<String, Object> save(User user) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
@@ -104,6 +107,7 @@ public class UserAdminController {
      * @throws Exception
      */
     @RequestMapping("/delete")
+    @ResponseBody
     @RequiresPermissions(value = "用户管理")
     public Map<String, Object> delete(Integer id) throws Exception {
         logService.save(new Log(Log.DELETE_ACTION,"删除用户信息"+userService.findById(id)));
@@ -120,6 +124,7 @@ public class UserAdminController {
      * @throws Exception
      */
     @RequestMapping("/saveRoleSet")
+    @ResponseBody
     @RequiresPermissions(value = "用户管理")
     public Map<String,Object> save(String roleIds,Integer userId)throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
@@ -137,5 +142,41 @@ public class UserAdminController {
         logService.save(new Log(Log.UPDATE_ACTION,"保存用户角色设置"));
         return resultMap;
     }
+
+    /**
+     * 修改密码
+     * @param newPassword
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/modifyPassword")
+    @ResponseBody
+    @RequiresPermissions(value="修改密码")
+    public Map<String,Object> modifyPassword(String newPassword,HttpSession session)throws Exception{
+        Map<String,Object> resultMap=new HashMap<>();
+        User currentUser=(User) session.getAttribute("currentUser");
+        User user=userService.findById(currentUser.getId());
+        user.setPassword(newPassword);
+        userService.save(user);
+        resultMap.put("success", true);
+        logService.save(new Log(Log.UPDATE_ACTION,"修改密码"));
+        return resultMap;
+    }
+
+    /**
+     * 安全退出
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/logout")
+    @RequiresPermissions(value="安全退出")
+    public String logout(HttpSession session)throws Exception{
+        logService.save(new Log(Log.LOGOUT_ACTION,"用户注销"));
+        SecurityUtils.getSubject().logout();
+        return "redirect:/login.html";
+    }
+
+
 
 }

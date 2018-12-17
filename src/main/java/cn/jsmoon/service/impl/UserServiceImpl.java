@@ -1,5 +1,6 @@
 package cn.jsmoon.service.impl;
 
+import cn.jsmoon.entity.Log;
 import cn.jsmoon.entity.User;
 import cn.jsmoon.repository.UserRepository;
 import cn.jsmoon.service.UserService;
@@ -37,32 +38,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> list(User user, Integer page, Integer pageSize, Direction direction, String... properties) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, direction, properties);
-        Page<User> pageUser = userRepository.findAll((Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-            Predicate predicate = cb.conjunction();
-            if (user != null) {
-                if (StringUtil.isNotEmpty(user.getUserName())) {
-                    predicate.getExpressions().add(cb.like(root.get("userName"), "%" + user.getUserName() + "%"));
-                }
-                predicate.getExpressions().add(cb.notEqual(root.get("id"), 1));
-            }
-            return predicate;
-        }, pageable);
+        Page<User> pageUser = userRepository.findAll((Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
+                search(user, root,  query,  cb), pageable);  //调用用户查询条件工具
         return pageUser.getContent();
     }
 
     @Override
     public Long getCount(User user) {
-        Long count = userRepository.count((Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-            Predicate predicate = cb.conjunction();
-            if (user != null) {
-                if (StringUtil.isNotEmpty(user.getUserName())) {
-                    predicate.getExpressions().add(cb.like(root.get("userName"), "%" + user.getUserName() + "%"));
-                }
-                predicate.getExpressions().add(cb.notEqual(root.get("id"), 1));
-            }
-            return predicate;
-        });
+        Long count = userRepository.count((Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
+            search(user, root,  query,  cb));   //调用用户查询条件工具
         return count;
+    }
+
+    /**
+     * 用户查询条件工具类
+     * @param user
+     * @param root
+     * @param query
+     * @param cb
+     * @return
+     */
+    private Predicate search(User user, Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        Predicate predicate = cb.conjunction();
+        if (user != null) {
+            if (StringUtil.isNotEmpty(user.getUserName())) {
+                predicate.getExpressions().add(cb.like(root.get("userName"), "%" + user.getUserName() + "%"));
+            }
+            predicate.getExpressions().add(cb.notEqual(root.get("id"), 1));
+        }
+        return predicate;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cn.jsmoon.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -39,7 +40,14 @@ public class Log {
     private String content; //操作内容
 
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonSerialize(using=CustomDateTimeSerializer.class)
     private Date time;      //日志创建日期
+
+    @Transient
+    private Date btime; // 起始时间 搜索用到
+
+    @Transient
+    private Date etime; // 结束时间 搜索用到
 
     public Log(String type,String content){
         super();
